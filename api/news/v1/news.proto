@@ -1,0 +1,206 @@
+syntax = "proto3";
+
+package news.v1;
+
+option go_package = "kratos-news-system/api/news/v1;v1";
+
+import "google/api/annotations.proto";
+// the validate rules:
+// https://github.com/envoyproxy/protoc-gen-validate
+import "validate/validate.proto";
+import "google/protobuf/timestamp.proto";
+
+// The greeting service definition.
+service News {
+  rpc Register (RegisterRequest) returns (RegisterRequest) {
+    option (google.api.http) = {
+      post: "/v1/user"
+      body: "*"
+    };
+  }
+  rpc Login(LoginRequest) returns (UserReply) {
+    option (google.api.http) = {
+      post : "/v1/user/login",
+      body : "*",
+    };
+  }
+  rpc GetUserByPhone(GetUserByPhoneRequest) returns (UserReply) {
+    option (google.api.http) = {
+      get : "/v1/user",
+    };
+  }
+  rpc UpdateUser(UpdateUserRequest) returns (UserReply) {
+    option (google.api.http) = {
+      put : "/v1/user",
+      body : "*",
+    };
+  }
+
+  rpc CreateArticle (CreateArticleRequest) returns (CreateArticleReply) {
+    option (google.api.http) = {
+      post: "/v1/article"
+      body: "*"
+    };
+  }
+  rpc UpdateArticle (UpdateArticleRequest) returns (UpdateArticleReply) {
+    option (google.api.http) = {
+      put: "/v1/article/{id}"
+      body: "*"
+    };
+  }
+  rpc DeleteArticle (DeleteArticleRequest) returns (DeleteArticleReply) {
+    option (google.api.http) = {
+      delete: "/v1/article/{id}"
+    };
+  }
+  rpc GetArticle (GetArticleRequest) returns (GetArticleReply) {
+    option (google.api.http) = {
+      get: "/v1/article/{id}"
+    };
+  }
+  rpc ListArticle (ListArticleRequest) returns (ListArticleReply) {
+    option (google.api.http) = {
+      get: "/v1/article"
+    };
+  }
+
+  rpc AddComment(AddCommentRequest) returns (AddCommentReply) {
+    option (google.api.http) = {
+      post : "/v1/articles/{article_id}/comments",
+      body : "*",
+    };
+  }
+
+  rpc GetComments(GetCommentRequest) returns (GetCommentReply) {
+    option (google.api.http) = {
+      get : "/v1/articles/{article_id}/comments",
+    };
+  }
+
+  rpc DeleteComment(DeleteCommentRequest) returns (DeleteCommentReply) {
+    option (google.api.http) = {
+      delete : "/v1/articles/{article_id}/comments/{id}",
+    };
+  }
+}
+message User {
+  int64 id = 1;
+  string username = 2;
+  string phone = 3;
+  string password = 4;
+  google.protobuf.Timestamp createdAt = 5;
+  google.protobuf.Timestamp updatedAt = 6;
+}
+
+message RegisterRequest {
+  string username = 1;
+  string phone = 2;
+  string password = 3;
+}
+
+message UserReply {
+  User user = 1;
+}
+
+message LoginRequest {
+  string phone = 1;
+  string password = 2;
+}
+
+message GetUserByPhoneRequest {
+  string phone = 1;
+}
+
+message UpdateUserRequest {
+  int64 id = 1;
+  string username = 2;
+  string phone = 3;
+  string password = 4;
+}
+
+
+message Article {
+  int64 id = 1;
+  string title = 2;
+  string content = 3;
+  google.protobuf.Timestamp createdAt = 4;
+  google.protobuf.Timestamp updatedAt = 5;}
+
+message CreateArticleRequest {
+  string title = 1 [(validate.rules).string = {min_len: 5, max_len: 50}]; // the title of string must be between 5 and 50 character
+  string content = 2;
+}
+
+message CreateArticleReply {
+  Article Article = 1;
+}
+
+message UpdateArticleRequest {
+  int64 id = 1 [(validate.rules).int64 = {gt: 0}];
+  string title = 2 [(validate.rules).string = {min_len: 5, max_len: 50}]; // the title of string must be between 5 and 50 character;
+  string content = 3;
+}
+
+message UpdateArticleReply {
+  Article Article = 1;
+}
+
+message DeleteArticleRequest {
+  int64 id = 1;
+}
+message DeleteArticleReply {
+}
+
+message GetArticleRequest {
+  int64 id = 1;
+}
+
+message GetArticleReply {
+  Article Article = 1;
+}
+
+message ListArticleRequest {
+}
+
+message ListArticleReply {
+  repeated Article results = 1;
+}
+
+message Comment {
+  int64 id = 1;
+  int64 user_id = 2;
+  int64 article_id = 3;
+  int64 content = 4;
+  google.protobuf.Timestamp createdAt = 5;
+}
+
+message AddCommentRequest {
+  int64 user_id = 2;
+  int64 article_id = 3;
+  int64 content = 4;
+}
+
+message AddCommentReply {
+  Comment comment = 1;
+}
+
+message GetCommentRequest {
+  int64 article_id = 1;
+}
+
+message GetCommentReply {
+  repeated Comment comment = 1;
+}
+
+message DeleteCommentRequest {
+  int64 id = 1;
+  int64 user_id = 2;
+  int64 article_id = 3;
+}
+
+message DeleteCommentReply {
+}
+
+
+
+

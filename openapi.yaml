@@ -3,21 +3,181 @@
 
 openapi: 3.0.3
 info:
-    title: Greeter API
+    title: News API
     description: The greeting service definition.
     version: 0.0.1
 paths:
-    /helloworld/{name}:
+    /v1/article:
         get:
             tags:
-                - Greeter
-                - subgroup
-            description: Sends a greeting
-            operationId: Greeter_SayHello
+                - News
+            operationId: News_ListArticle
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/news.v1.ListArticleReply'
+        post:
+            tags:
+                - News
+            operationId: News_CreateArticle
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/news.v1.CreateArticleRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/news.v1.CreateArticleReply'
+    /v1/article/{id}:
+        get:
+            tags:
+                - News
+            operationId: News_GetArticle
             parameters:
-                - name: name
+                - name: id
                   in: path
                   required: true
+                  schema:
+                    type: integer
+                    format: int64
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/news.v1.GetArticleReply'
+        put:
+            tags:
+                - News
+            operationId: News_UpdateArticle
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: integer
+                    format: int64
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/news.v1.UpdateArticleRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/news.v1.UpdateArticleReply'
+        delete:
+            tags:
+                - News
+            operationId: News_DeleteArticle
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: integer
+                    format: int64
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/news.v1.DeleteArticleReply'
+    /v1/articles/{articleId}/comments:
+        get:
+            tags:
+                - News
+            operationId: News_GetComments
+            parameters:
+                - name: articleId
+                  in: path
+                  required: true
+                  schema:
+                    type: integer
+                    format: int64
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/news.v1.GetCommentReply'
+        post:
+            tags:
+                - News
+            operationId: News_AddComment
+            parameters:
+                - name: articleId
+                  in: path
+                  required: true
+                  schema:
+                    type: integer
+                    format: int64
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/news.v1.AddCommentRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/news.v1.AddCommentReply'
+    /v1/articles/{articleId}/comments/{id}:
+        delete:
+            tags:
+                - News
+            operationId: News_DeleteComment
+            parameters:
+                - name: articleId
+                  in: path
+                  required: true
+                  schema:
+                    type: integer
+                    format: int64
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: integer
+                    format: int64
+                - name: userId
+                  in: query
+                  schema:
+                    type: integer
+                    format: int64
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/news.v1.DeleteCommentReply'
+    /v1/user:
+        get:
+            tags:
+                - News
+            operationId: News_GetUserByPhone
+            parameters:
+                - name: phone
+                  in: query
                   schema:
                     type: string
             responses:
@@ -26,14 +186,214 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/helloworld.v1.HelloReply'
+                                $ref: '#/components/schemas/news.v1.UserReply'
+        put:
+            tags:
+                - News
+            operationId: News_UpdateUser
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/news.v1.UpdateUserRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/news.v1.UserReply'
+        post:
+            tags:
+                - News
+            operationId: News_Register
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/news.v1.RegisterRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/news.v1.RegisterRequest'
+    /v1/user/login:
+        post:
+            tags:
+                - News
+            operationId: News_Login
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/news.v1.LoginRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/news.v1.UserReply'
 components:
     schemas:
-        helloworld.v1.HelloReply:
+        news.v1.AddCommentReply:
             type: object
             properties:
-                message:
+                comment:
+                    $ref: '#/components/schemas/news.v1.Comment'
+        news.v1.AddCommentRequest:
+            type: object
+            properties:
+                userId:
+                    type: integer
+                    format: int64
+                articleId:
+                    type: integer
+                    format: int64
+                content:
+                    type: integer
+                    format: int64
+        news.v1.Article:
+            type: object
+            properties:
+                id:
+                    type: integer
+                    format: int64
+                title:
                     type: string
-            description: The response message containing the greetings
+                content:
+                    type: string
+                createdAt:
+                    type: string
+                    format: date-time
+                updatedAt:
+                    type: string
+                    format: date-time
+        news.v1.Comment:
+            type: object
+            properties:
+                id:
+                    type: integer
+                    format: int64
+                userId:
+                    type: integer
+                    format: int64
+                articleId:
+                    type: integer
+                    format: int64
+                content:
+                    type: integer
+                    format: int64
+                createdAt:
+                    type: string
+                    format: date-time
+        news.v1.CreateArticleReply:
+            type: object
+            properties:
+                Article:
+                    $ref: '#/components/schemas/news.v1.Article'
+        news.v1.CreateArticleRequest:
+            type: object
+            properties:
+                title:
+                    type: string
+                content:
+                    type: string
+        news.v1.DeleteArticleReply:
+            type: object
+            properties: {}
+        news.v1.DeleteCommentReply:
+            type: object
+            properties: {}
+        news.v1.GetArticleReply:
+            type: object
+            properties:
+                Article:
+                    $ref: '#/components/schemas/news.v1.Article'
+        news.v1.GetCommentReply:
+            type: object
+            properties:
+                comment:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/news.v1.Comment'
+        news.v1.ListArticleReply:
+            type: object
+            properties:
+                results:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/news.v1.Article'
+        news.v1.LoginRequest:
+            type: object
+            properties:
+                phone:
+                    type: string
+                password:
+                    type: string
+        news.v1.RegisterRequest:
+            type: object
+            properties:
+                username:
+                    type: string
+                phone:
+                    type: string
+                password:
+                    type: string
+        news.v1.UpdateArticleReply:
+            type: object
+            properties:
+                Article:
+                    $ref: '#/components/schemas/news.v1.Article'
+        news.v1.UpdateArticleRequest:
+            type: object
+            properties:
+                id:
+                    type: integer
+                    format: int64
+                title:
+                    type: string
+                content:
+                    type: string
+        news.v1.UpdateUserRequest:
+            type: object
+            properties:
+                id:
+                    type: integer
+                    format: int64
+                username:
+                    type: string
+                phone:
+                    type: string
+                password:
+                    type: string
+        news.v1.User:
+            type: object
+            properties:
+                id:
+                    type: integer
+                    format: int64
+                username:
+                    type: string
+                phone:
+                    type: string
+                password:
+                    type: string
+                createdAt:
+                    type: string
+                    format: date-time
+                updatedAt:
+                    type: string
+                    format: date-time
+        news.v1.UserReply:
+            type: object
+            properties:
+                user:
+                    $ref: '#/components/schemas/news.v1.User'
 tags:
-    - name: Greeter
+    - name: News
