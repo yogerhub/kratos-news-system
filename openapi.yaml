@@ -171,22 +171,6 @@ paths:
                             schema:
                                 $ref: '#/components/schemas/news.v1.DeleteCommentReply'
     /v1/user:
-        get:
-            tags:
-                - News
-            operationId: News_GetUserByPhone
-            parameters:
-                - name: phone
-                  in: query
-                  schema:
-                    type: string
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/news.v1.UserReply'
         put:
             tags:
                 - News
@@ -232,6 +216,24 @@ paths:
                         schema:
                             $ref: '#/components/schemas/news.v1.LoginRequest'
                 required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/news.v1.UserReply'
+    /v1/user/{phone}:
+        get:
+            tags:
+                - News
+            operationId: News_GetUserByPhone
+            parameters:
+                - name: phone
+                  in: path
+                  required: true
+                  schema:
+                    type: string
             responses:
                 "200":
                     description: OK

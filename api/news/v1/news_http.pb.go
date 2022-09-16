@@ -51,7 +51,7 @@ func RegisterNewsHTTPServer(s *http.Server, srv NewsHTTPServer) {
 	r := s.Route("/")
 	r.POST("/v1/user", _News_Register0_HTTP_Handler(srv))
 	r.POST("/v1/user/login", _News_Login0_HTTP_Handler(srv))
-	r.GET("/v1/user", _News_GetUserByPhone0_HTTP_Handler(srv))
+	r.GET("/v1/user/{phone}", _News_GetUserByPhone0_HTTP_Handler(srv))
 	r.PUT("/v1/user", _News_UpdateUser0_HTTP_Handler(srv))
 	r.POST("/v1/article", _News_CreateArticle0_HTTP_Handler(srv))
 	r.PUT("/v1/article/{id}", _News_UpdateArticle0_HTTP_Handler(srv))
@@ -105,6 +105,9 @@ func _News_GetUserByPhone0_HTTP_Handler(srv NewsHTTPServer) func(ctx http.Contex
 	return func(ctx http.Context) error {
 		var in GetUserByPhoneRequest
 		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindVars(&in); err != nil {
 			return err
 		}
 		http.SetOperation(ctx, OperationNewsGetUserByPhone)
@@ -412,7 +415,7 @@ func (c *NewsHTTPClientImpl) GetComments(ctx context.Context, in *GetCommentRequ
 
 func (c *NewsHTTPClientImpl) GetUserByPhone(ctx context.Context, in *GetUserByPhoneRequest, opts ...http.CallOption) (*UserReply, error) {
 	var out UserReply
-	pattern := "/v1/user"
+	pattern := "/v1/user/{phone}"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationNewsGetUserByPhone))
 	opts = append(opts, http.PathTemplate(pattern))
