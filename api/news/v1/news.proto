@@ -124,7 +124,8 @@ message Article {
   string title = 2;
   string content = 3;
   google.protobuf.Timestamp createdAt = 4;
-  google.protobuf.Timestamp updatedAt = 5;}
+  google.protobuf.Timestamp updatedAt = 5;
+}
 
 message CreateArticleRequest {
   string title = 1 [(validate.rules).string = {min_len: 5, max_len: 50}]; // the title of string must be between 5 and 50 character
@@ -170,14 +171,14 @@ message Comment {
   int64 id = 1;
   int64 user_id = 2;
   int64 article_id = 3;
-  int64 content = 4;
+  string content = 4;
   google.protobuf.Timestamp createdAt = 5;
 }
 
 message AddCommentRequest {
-  int64 user_id = 2;
-  int64 article_id = 3;
-  int64 content = 4;
+  int64 user_id = 1;
+  int64 article_id = 2;
+  string content = 3;
 }
 
 message AddCommentReply {

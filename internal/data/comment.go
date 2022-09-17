@@ -2,10 +2,9 @@ package data
 
 import (
 	"context"
+	"github.com/go-kratos/kratos/v2/log"
 	"gorm.io/gorm"
 	"kratos-news-system/internal/biz"
-
-	"github.com/go-kratos/kratos/v2/log"
 )
 
 type Comment struct {
@@ -13,7 +12,6 @@ type Comment struct {
 	UserId    int64  `json:"user_id"`
 	ArticleId int64  `json:"article_id"`
 	Content   string `json:"content"`
-	Password  string `json:"password"`
 }
 
 type commentRepo struct {
@@ -30,14 +28,50 @@ func NewCommentRepo(data *Data, logger log.Logger) biz.CommentRepo {
 }
 
 func (r *commentRepo) AddComment(ctx context.Context, comment *biz.Comment) (*biz.Comment, error) {
-	return comment, nil
+	co := Comment{
+		UserId:    comment.UserId,
+		ArticleId: comment.ArticleId,
+		Content:   comment.Content,
+	}
+
+	result := r.data.db.Create(&co) // 通过数据的指针来创建
+	if result.Error != nil {
+		return nil, result.Error
+	}
+
+	return &biz.Comment{
+		ID:        int64(co.ID),
+		UserId:    co.UserId,
+		ArticleId: co.ArticleId,
+		Content:   co.Content,
+		CreatedAt: co.CreatedAt,
+	}, nil
 }
 
+// GetComments 获取评论列表
 func (r *commentRepo) GetComments(ctx context.Context, articleId int64) ([]*biz.Comment, error) {
-	rs := make([]*biz.Comment, 0)
+	var comments []Comment
+	result := r.data.db.Where("article_id = ?", articleId).Find(&comments)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+	log.Info("comment list:", comments, result)
+	rs := make([]*biz.Comment, len(comments))
+
+	for i, x := range comments {
+		rs[i] = &biz.Comment{
+			ID:        int64(x.ID),
+			UserId:    x.UserId,
+			ArticleId: x.ArticleId,
+			Content:   x.Content,
+			CreatedAt: x.CreatedAt,
+		}
+	}
 	return rs, nil
 }
 
 func (r *commentRepo) DeleteComment(ctx context.Context, id int64) error {
-	return nil
+	rv := r.data.db.Delete(&Comment{}, id)
+
+	return rv.Error
 }

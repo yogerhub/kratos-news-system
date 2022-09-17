@@ -15,12 +15,14 @@ type NewsService struct {
 	log     *log.Helper
 	user    *biz.UserUsecase
 	article *biz.ArticleUsecase
+	comment *biz.CommentUsecase
 }
 
-func NewNewsService(article *biz.ArticleUsecase, user *biz.UserUsecase, logger log.Logger) *NewsService {
+func NewNewsService(article *biz.ArticleUsecase, user *biz.UserUsecase, comment *biz.CommentUsecase, logger log.Logger) *NewsService {
 	return &NewsService{
 		article: article,
 		user:    user,
+		comment: comment,
 		log:     log.NewHelper(logger),
 	}
 }

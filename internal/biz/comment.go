@@ -34,6 +34,7 @@ func (uc *CommentUsecase) AddComment(ctx context.Context, comment *Comment) (p *
 }
 
 func (uc *CommentUsecase) GetComments(ctx context.Context, articleId int64) ([]*Comment, error) {
+	log.Info("comment list:", articleId)
 	return uc.repo.GetComments(ctx, articleId)
 }
 

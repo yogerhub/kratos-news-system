@@ -258,8 +258,7 @@ components:
                     type: integer
                     format: int64
                 content:
-                    type: integer
-                    format: int64
+                    type: string
         news.v1.Article:
             type: object
             properties:
@@ -289,8 +288,7 @@ components:
                     type: integer
                     format: int64
                 content:
-                    type: integer
-                    format: int64
+                    type: string
                 createdAt:
                     type: string
                     format: date-time
