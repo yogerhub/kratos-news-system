@@ -27,7 +27,9 @@ func wireApp(confServer *conf.Server, confData *conf.Data, logger log.Logger) (*
 	}
 	articleRepo := data.NewArticleRepo(dataData, logger)
 	articleUsecase := biz.NewArticleUsecase(articleRepo, logger)
-	newsService := service.NewNewsService(articleUsecase, logger)
+	userRepo := data.NewUserRepo(dataData, logger)
+	userUsecase := biz.NewUserUsecase(userRepo, logger)
+	newsService := service.NewNewsService(articleUsecase, userUsecase, logger)
 	grpcServer := server.NewGRPCServer(confServer, newsService, logger)
 	httpServer := server.NewHTTPServer(confServer, newsService, logger)
 	app := newApp(logger, grpcServer, httpServer)

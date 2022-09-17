@@ -12,7 +12,7 @@ import "google/protobuf/timestamp.proto";
 
 // The greeting service definition.
 service News {
-  rpc Register (RegisterRequest) returns (RegisterRequest) {
+  rpc Register (RegisterRequest) returns (UserReply) {
     option (google.api.http) = {
       post: "/v1/user"
       body: "*"
@@ -103,7 +103,7 @@ message UserReply {
 }
 
 message LoginRequest {
-  string phone = 1;
+  string username = 1;
   string password = 2;
 }
 

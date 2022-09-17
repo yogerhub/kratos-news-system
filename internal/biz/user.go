@@ -31,15 +31,15 @@ func NewUserUsecase(repo UserRepo, logger log.Logger) *UserUsecase {
 	return &UserUsecase{repo: repo}
 }
 
-func (uc *UserUsecase) Register(ctx context.Context, phone string) (p *User, err error) {
-	return uc.repo.GetUserByPhone(ctx, phone)
+func (uc *UserUsecase) Register(ctx context.Context, user *User) (p *User, err error) {
+	return uc.repo.Register(ctx, user)
 }
 
 func (uc *UserUsecase) Login(ctx context.Context, user *User) (*User, error) {
 	return uc.repo.Login(ctx, user)
 }
 
-func (uc *UserUsecase) GetUserByPhone(ctx context.Context, phone string) (*User, error) {
+func (uc *UserUsecase) GetUserByPhone(ctx context.Context, phone string) (u *User, err error) {
 	return uc.repo.GetUserByPhone(ctx, phone)
 }
 

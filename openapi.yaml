@@ -204,7 +204,7 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/news.v1.RegisterRequest'
+                                $ref: '#/components/schemas/news.v1.UserReply'
     /v1/user/login:
         post:
             tags:
@@ -334,7 +334,7 @@ components:
         news.v1.LoginRequest:
             type: object
             properties:
-                phone:
+                username:
                     type: string
                 password:
                     type: string

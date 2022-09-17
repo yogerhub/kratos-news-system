@@ -42,7 +42,7 @@ type NewsHTTPServer interface {
 	GetUserByPhone(context.Context, *GetUserByPhoneRequest) (*UserReply, error)
 	ListArticle(context.Context, *ListArticleRequest) (*ListArticleReply, error)
 	Login(context.Context, *LoginRequest) (*UserReply, error)
-	Register(context.Context, *RegisterRequest) (*RegisterRequest, error)
+	Register(context.Context, *RegisterRequest) (*UserReply, error)
 	UpdateArticle(context.Context, *UpdateArticleRequest) (*UpdateArticleReply, error)
 	UpdateUser(context.Context, *UpdateUserRequest) (*UserReply, error)
 }
@@ -77,7 +77,7 @@ func _News_Register0_HTTP_Handler(srv NewsHTTPServer) func(ctx http.Context) err
 		if err != nil {
 			return err
 		}
-		reply := out.(*RegisterRequest)
+		reply := out.(*UserReply)
 		return ctx.Result(200, reply)
 	}
 }
@@ -322,7 +322,7 @@ type NewsHTTPClient interface {
 	GetUserByPhone(ctx context.Context, req *GetUserByPhoneRequest, opts ...http.CallOption) (rsp *UserReply, err error)
 	ListArticle(ctx context.Context, req *ListArticleRequest, opts ...http.CallOption) (rsp *ListArticleReply, err error)
 	Login(ctx context.Context, req *LoginRequest, opts ...http.CallOption) (rsp *UserReply, err error)
-	Register(ctx context.Context, req *RegisterRequest, opts ...http.CallOption) (rsp *RegisterRequest, err error)
+	Register(ctx context.Context, req *RegisterRequest, opts ...http.CallOption) (rsp *UserReply, err error)
 	UpdateArticle(ctx context.Context, req *UpdateArticleRequest, opts ...http.CallOption) (rsp *UpdateArticleReply, err error)
 	UpdateUser(ctx context.Context, req *UpdateUserRequest, opts ...http.CallOption) (rsp *UserReply, err error)
 }
@@ -452,8 +452,8 @@ func (c *NewsHTTPClientImpl) Login(ctx context.Context, in *LoginRequest, opts .
 	return &out, err
 }
 
-func (c *NewsHTTPClientImpl) Register(ctx context.Context, in *RegisterRequest, opts ...http.CallOption) (*RegisterRequest, error) {
-	var out RegisterRequest
+func (c *NewsHTTPClientImpl) Register(ctx context.Context, in *RegisterRequest, opts ...http.CallOption) (*UserReply, error) {
+	var out UserReply
 	pattern := "/v1/user"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationNewsRegister))

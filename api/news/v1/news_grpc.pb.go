@@ -22,7 +22,7 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type NewsClient interface {
-	Register(ctx context.Context, in *RegisterRequest, opts ...grpc.CallOption) (*RegisterRequest, error)
+	Register(ctx context.Context, in *RegisterRequest, opts ...grpc.CallOption) (*UserReply, error)
 	Login(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*UserReply, error)
 	GetUserByPhone(ctx context.Context, in *GetUserByPhoneRequest, opts ...grpc.CallOption) (*UserReply, error)
 	UpdateUser(ctx context.Context, in *UpdateUserRequest, opts ...grpc.CallOption) (*UserReply, error)
@@ -44,8 +44,8 @@ func NewNewsClient(cc grpc.ClientConnInterface) NewsClient {
 	return &newsClient{cc}
 }
 
-func (c *newsClient) Register(ctx context.Context, in *RegisterRequest, opts ...grpc.CallOption) (*RegisterRequest, error) {
-	out := new(RegisterRequest)
+func (c *newsClient) Register(ctx context.Context, in *RegisterRequest, opts ...grpc.CallOption) (*UserReply, error) {
+	out := new(UserReply)
 	err := c.cc.Invoke(ctx, "/news.v1.News/Register", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -156,7 +156,7 @@ func (c *newsClient) DeleteComment(ctx context.Context, in *DeleteCommentRequest
 // All implementations must embed UnimplementedNewsServer
 // for forward compatibility
 type NewsServer interface {
-	Register(context.Context, *RegisterRequest) (*RegisterRequest, error)
+	Register(context.Context, *RegisterRequest) (*UserReply, error)
 	Login(context.Context, *LoginRequest) (*UserReply, error)
 	GetUserByPhone(context.Context, *GetUserByPhoneRequest) (*UserReply, error)
 	UpdateUser(context.Context, *UpdateUserRequest) (*UserReply, error)
@@ -175,7 +175,7 @@ type NewsServer interface {
 type UnimplementedNewsServer struct {
 }
 
-func (UnimplementedNewsServer) Register(context.Context, *RegisterRequest) (*RegisterRequest, error) {
+func (UnimplementedNewsServer) Register(context.Context, *RegisterRequest) (*UserReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Register not implemented")
 }
 func (UnimplementedNewsServer) Login(context.Context, *LoginRequest) (*UserReply, error) {
