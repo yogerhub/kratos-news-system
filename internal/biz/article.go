@@ -18,8 +18,8 @@ type Article struct {
 type ArticleRepo interface {
 	ListArticle(ctx context.Context) ([]*Article, error)
 	GetArticle(ctx context.Context, id int64) (*Article, error)
-	CreateArticle(ctx context.Context, article *Article) error
-	UpdateArticle(ctx context.Context, id int64, article *Article) error
+	CreateArticle(ctx context.Context, article *Article) (p *Article, err error)
+	UpdateArticle(ctx context.Context, id int64, article *Article) (p *Article, err error)
 	DeleteArticle(ctx context.Context, id int64) error
 }
 
@@ -47,11 +47,11 @@ func (uc *ArticleUsecase) Get(ctx context.Context, id int64) (p *Article, err er
 	return
 }
 
-func (uc *ArticleUsecase) Create(ctx context.Context, article *Article) error {
+func (uc *ArticleUsecase) Create(ctx context.Context, article *Article) (p *Article, err error) {
 	return uc.repo.CreateArticle(ctx, article)
 }
 
-func (uc *ArticleUsecase) Update(ctx context.Context, id int64, article *Article) error {
+func (uc *ArticleUsecase) Update(ctx context.Context, id int64, article *Article) (p *Article, err error) {
 	return uc.repo.UpdateArticle(ctx, id, article)
 }
 
