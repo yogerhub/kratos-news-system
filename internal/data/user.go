@@ -2,10 +2,18 @@ package data
 
 import (
 	"context"
+	"gorm.io/gorm"
 	"kratos-news-system/internal/biz"
 
 	"github.com/go-kratos/kratos/v2/log"
 )
+
+type User struct {
+	gorm.Model
+	Username string `json:"username"`
+	Phone    string `json:"phone"`
+	Password string `json:"password"`
+}
 
 type userRepo struct {
 	data *Data

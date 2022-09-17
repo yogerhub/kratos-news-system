@@ -2,10 +2,19 @@ package data
 
 import (
 	"context"
+	"gorm.io/gorm"
 	"kratos-news-system/internal/biz"
 
 	"github.com/go-kratos/kratos/v2/log"
 )
+
+type Comment struct {
+	gorm.Model
+	UserId    int64  `json:"user_id"`
+	ArticleId int64  `json:"article_id"`
+	Content   string `json:"content"`
+	Password  string `json:"password"`
+}
 
 type commentRepo struct {
 	data *Data
