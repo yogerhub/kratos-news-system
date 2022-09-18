@@ -54,6 +54,9 @@ func (r *userRepo) Login(ctx context.Context, user *biz.User) (*biz.User, error)
 	if err != nil {
 		return nil, err
 	}
+
+	_, _ = r.SetUserInfo(ctx, u)
+
 	return user, nil
 }
 
@@ -63,7 +66,6 @@ func (r *userRepo) GetUserByPhone(ctx context.Context, phone string) (*biz.User,
 	if err != nil {
 		return nil, err
 	}
-	log.Info(u)
 	return &biz.User{
 		ID:        int64(u.ID),
 		Username:  u.Username,
