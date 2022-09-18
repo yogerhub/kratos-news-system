@@ -43,17 +43,33 @@ func (r *articleRepo) ListArticle(ctx context.Context) ([]*biz.Article, error) {
 
 func (r *articleRepo) GetArticle(ctx context.Context, id int64) (*biz.Article, error) {
 	ar := new(Article)
-	err := r.data.db.Where("id = ?", id).First(ar).Error
-	if err != nil {
-		return nil, err
+	exist, err := r.ExistsArticleInfo(ctx, id)
+	if err != nil || exist == false {
+		err := r.data.db.Where("id = ?", id).First(ar).Error
+		if err != nil {
+			return nil, err
+		}
+		_, _ = r.SetArticleInfo(ctx, ar)
+		return &biz.Article{
+			ID:        int64(ar.ID),
+			Title:     ar.Title,
+			Content:   ar.Content,
+			CreatedAt: ar.CreatedAt,
+			UpdatedAt: ar.UpdatedAt,
+		}, nil
+	} else {
+		article, err := r.GetArticleInfo(ctx, id)
+		if err != nil {
+			return nil, err
+		}
+		return &biz.Article{
+			ID:        int64(article.ID),
+			Title:     article.Title,
+			Content:   article.Content,
+			CreatedAt: article.CreatedAt,
+			UpdatedAt: article.UpdatedAt,
+		}, nil
 	}
-	return &biz.Article{
-		ID:        int64(ar.ID),
-		Title:     ar.Title,
-		Content:   ar.Content,
-		CreatedAt: ar.CreatedAt,
-		UpdatedAt: ar.UpdatedAt,
-	}, nil
 }
 
 func (r *articleRepo) CreateArticle(cxt context.Context, article *biz.Article) (*biz.Article, error) {
@@ -66,6 +82,7 @@ func (r *articleRepo) CreateArticle(cxt context.Context, article *biz.Article) (
 	if result.Error != nil {
 		return nil, result.Error
 	}
+	_, _ = r.SetArticleInfo(cxt, &ar)
 	return &biz.Article{
 		ID:        int64(ar.ID),
 		Title:     ar.Title,
@@ -79,6 +96,10 @@ func (r *articleRepo) CreateArticle(cxt context.Context, article *biz.Article) (
 func (r *articleRepo) UpdateArticle(ctx context.Context, id int64, article *biz.Article) (*biz.Article, error) {
 	var po Article
 	err := r.data.db.Model(&po).Updates(article).Error
+	_, _ = r.SetArticleInfo(ctx, &po)
+	if err != nil {
+		return nil, err
+	}
 	return convertArticle(po), err
 }
 

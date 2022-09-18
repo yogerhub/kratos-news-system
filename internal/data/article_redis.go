@@ -3,6 +3,7 @@ package data
 import (
 	"context"
 	"fmt"
+	"strconv"
 )
 
 func articleKey(id int64) string {
@@ -18,7 +19,7 @@ func (u *articleRepo) SetArticleInfo(ctx context.Context, article *Article) (res
 	args = append(args, "content")
 	args = append(args, article.Content)
 	args = append(args, "created_at")
-	args = append(args, article.CreatedAt)
+	args = append(args, article.CreatedAt.String())
 
 	res, err = u.data.rdb.HMSet(ctx, articleKey(int64(article.ID)), args...).Result()
 	fmt.Println(res, err)
@@ -39,8 +40,16 @@ func (u *articleRepo) ExistsArticleInfo(ctx context.Context, id int64) (rv bool,
 	return
 }
 
-func (u *articleRepo) GetArticleInfo(ctx context.Context, id int64) (rv int64, err error) {
+func (u *articleRepo) GetArticleInfo(ctx context.Context, id int64) (article Article, err error) {
 	m, err := u.data.rdb.HGetAll(ctx, articleKey(id)).Result()
-	fmt.Println(m, err)
+
+	if v, ok := m["id"]; ok {
+		aId, _ := strconv.Atoi(v)
+		article.ID = uint(aId)
+	}
+	article.Title = m["title"]
+	article.Content = m["content"]
+
+	fmt.Println(m, article, err)
 	return
 }

@@ -3,6 +3,7 @@ package data
 import (
 	"context"
 	"fmt"
+	"strconv"
 )
 
 func userKey(id int64) string {
@@ -18,7 +19,7 @@ func (u *userRepo) SetUserInfo(ctx context.Context, user *User) (res bool, err e
 	args = append(args, "phone")
 	args = append(args, user.Phone)
 	args = append(args, "updated_at")
-	args = append(args, user.UpdatedAt)
+	args = append(args, user.UpdatedAt.String())
 
 	res, err = u.data.rdb.HMSet(ctx, userKey(int64(user.ID)), args...).Result()
 	fmt.Println(res, err)
@@ -39,8 +40,14 @@ func (u *userRepo) ExistsUserInfo(ctx context.Context, id int64) (rv bool, err e
 	return
 }
 
-func (u *userRepo) GetUserInfo(ctx context.Context, id int64) (rv int64, err error) {
+func (u *userRepo) GetUserInfo(ctx context.Context, id int64) (user User, err error) {
 	m, err := u.data.rdb.HGetAll(ctx, userKey(id)).Result()
+	if v, ok := m["id"]; ok {
+		aId, _ := strconv.Atoi(v)
+		user.ID = uint(aId)
+	}
+	user.Username = m["username"]
+	user.Phone = m["phone"]
 	fmt.Println(m, err)
 	return
 }
