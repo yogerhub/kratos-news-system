@@ -1,14 +1,18 @@
 package service
 
 import (
+	consul "github.com/go-kratos/kratos/contrib/registry/consul/v2"
 	"github.com/go-kratos/kratos/v2/log"
+	"github.com/go-kratos/kratos/v2/registry"
 	"github.com/google/wire"
+	consulAPI "github.com/hashicorp/consul/api"
 	pb "kratos-news-system/api/news/v1"
 	"kratos-news-system/internal/biz"
+	"kratos-news-system/internal/conf"
 )
 
 // ProviderSet is service providers.
-var ProviderSet = wire.NewSet(NewNewsService)
+var ProviderSet = wire.NewSet(NewNewsService, NewRegistrar)
 
 type NewsService struct {
 	pb.UnimplementedNewsServer
@@ -25,4 +29,17 @@ func NewNewsService(article *biz.ArticleUsecase, user *biz.UserUsecase, comment 
 		comment: comment,
 		log:     log.NewHelper(logger),
 	}
+}
+
+func NewRegistrar(conf *conf.Registry) registry.Registrar {
+	c := consulAPI.DefaultConfig()
+	c.Address = conf.Consul.Address
+	c.Scheme = conf.Consul.Scheme
+	cli, err := consulAPI.NewClient(c)
+	if err != nil {
+		panic(err)
+	}
+	log.Info("consul register")
+	r := consul.New(cli, consul.WithHealthCheck(true))
+	return r
 }
