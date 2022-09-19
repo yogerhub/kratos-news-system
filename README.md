@@ -1,4 +1,4 @@
-# Kratos Project Template
+# Kratos News System
 
 ## 项目说明
 
