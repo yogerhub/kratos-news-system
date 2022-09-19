@@ -1,9 +1,9 @@
 server:
   http:
-    addr: 0.0.0.0:0    #随机分配端口
+    addr: 0.0.0.0:8000
     timeout: 1s
   grpc:
-    addr: 0.0.0.0:0
+    addr: 0.0.0.0:0 #随机分配端口
     timeout: 1s
 data:
   database:
