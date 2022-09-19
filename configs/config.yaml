@@ -3,7 +3,7 @@ server:
     addr: 0.0.0.0:0    #随机分配端口
     timeout: 1s
   grpc:
-    addr: 0.0.0.0:9000
+    addr: 0.0.0.0:0
     timeout: 1s
 data:
   database:

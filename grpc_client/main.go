@@ -2,19 +2,33 @@ package main
 
 import (
 	"context"
+	"github.com/go-kratos/kratos/contrib/registry/consul/v2"
+	consulAPI "github.com/hashicorp/consul/api"
 	v1 "kratos-news-system/api/news/v1"
 	"log"
 
 	"github.com/go-kratos/kratos/v2/errors"
 	"github.com/go-kratos/kratos/v2/middleware/recovery"
 	kgrpc "github.com/go-kratos/kratos/v2/transport/grpc"
+
 	"google.golang.org/grpc"
 )
 
 func main() {
+
+	c := consulAPI.DefaultConfig()
+	c.Address = "127.0.0.1:8500"
+	c.Scheme = "http"
+	cli, err := consulAPI.NewClient(c)
+	if err != nil {
+		panic(err)
+	}
+	r := consul.New(cli, consul.WithHealthCheck(false))
+
 	conn, err := kgrpc.DialInsecure(
 		context.Background(),
-		kgrpc.WithEndpoint("127.0.0.1:9000"),
+		kgrpc.WithDiscovery(r),
+		kgrpc.WithEndpoint("discovery:///news.base.service"),
 		kgrpc.WithMiddleware(
 			recovery.Recovery(),
 		),
