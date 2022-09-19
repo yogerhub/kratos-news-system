@@ -2,7 +2,7 @@
 
 ## 项目说明
 
-kratos-news-system通过实现用户模块，新闻文章模块，评论模块去探索kratos的基本设计理念，包括项目的初始化、kratos工具的使用，makefile文件的编写提升操作的便捷性。API接口的定义，配置的使用、HTTP和GRPC的使用。
+kratos-news-system通过实现用户模块，新闻文章模块，评论模块去探索kratos的基本设计理念，包括项目的初始化、kratos工具的使用，makefile文件的编写提升操作的便捷性。API接口的定义，配置的使用、HTTP和GRPC的使用,使用consul服务发现。
 
 ## 参考资料
 ```api
