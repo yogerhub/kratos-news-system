@@ -5,13 +5,13 @@ import (
 	"github.com/go-kratos/kratos/v2/middleware/recovery"
 	"github.com/go-kratos/kratos/v2/transport/http"
 	"github.com/gorilla/handlers"
-	v1 "kratos-news-system/api/user/v1"
-	"kratos-news-system/app/user/service/internal/conf"
-	"kratos-news-system/app/user/service/internal/service"
+	v1 "github.com/yogerhub/kratos-news-system/api/user/v1"
+	"github.com/yogerhub/kratos-news-system/app/user/service/internal/conf"
+	"github.com/yogerhub/kratos-news-system/app/user/service/internal/service"
 )
 
 // NewHTTPServer new a HTTP server.
-func NewHTTPServer(c *conf.Server, greeter *service.NewsService, logger log.Logger) *http.Server {
+func NewHTTPServer(c *conf.Server, greeter *service.UserService, logger log.Logger) *http.Server {
 	var opts = []http.ServerOption{
 		http.Middleware(
 			recovery.Recovery(),

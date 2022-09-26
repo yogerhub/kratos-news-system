@@ -3,8 +3,8 @@ package data
 import (
 	"context"
 	"github.com/go-kratos/kratos/v2/log"
+	"github.com/yogerhub/kratos-news-system/app/news/service/internal/biz"
 	"gorm.io/gorm"
-	"kratos-news-system/app/user/service/internal/biz"
 )
 
 type Article struct {

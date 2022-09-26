@@ -1,4 +1,4 @@
-module kratos-news-system
+module  github.com/yogerhub/kratos-news-system
 
 go 1.17
 

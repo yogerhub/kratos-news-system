@@ -2,14 +2,14 @@ package service
 
 import (
 	"context"
+	"github.com/yogerhub/kratos-news-system/app/user/service/internal/biz"
 	"google.golang.org/protobuf/types/known/timestamppb"
-	"kratos-news-system/app/user/service/internal/biz"
 	"time"
 
-	pb "kratos-news-system/api/user/v1"
+	pb "github.com/yogerhub/kratos-news-system/api/user/v1"
 )
 
-func (s *NewsService) Register(ctx context.Context, req *pb.RegisterRequest) (*pb.UserReply, error) {
+func (s *UserService) Register(ctx context.Context, req *pb.RegisterRequest) (*pb.UserReply, error) {
 	user := &biz.User{
 		Username:  req.Username,
 		Phone:     req.Phone,
@@ -29,7 +29,7 @@ func (s *NewsService) Register(ctx context.Context, req *pb.RegisterRequest) (*p
 		CreatedAt: timestamppb.New(res.CreatedAt),
 	}}, err
 }
-func (s *NewsService) Login(ctx context.Context, req *pb.LoginRequest) (*pb.UserReply, error) {
+func (s *UserService) Login(ctx context.Context, req *pb.LoginRequest) (*pb.UserReply, error) {
 	user := &biz.User{
 		Username: req.Username,
 		Password: req.Password,
@@ -49,7 +49,7 @@ func (s *NewsService) Login(ctx context.Context, req *pb.LoginRequest) (*pb.User
 	}}, err
 
 }
-func (s *NewsService) GetUserByPhone(ctx context.Context, req *pb.GetUserByPhoneRequest) (*pb.UserReply, error) {
+func (s *UserService) GetUserByPhone(ctx context.Context, req *pb.GetUserByPhoneRequest) (*pb.UserReply, error) {
 
 	res, err := s.user.GetUserByPhone(ctx, req.Phone)
 	if err != nil {
@@ -64,7 +64,7 @@ func (s *NewsService) GetUserByPhone(ctx context.Context, req *pb.GetUserByPhone
 		CreatedAt: timestamppb.New(res.CreatedAt),
 	}}, nil
 }
-func (s *NewsService) UpdateUser(ctx context.Context, req *pb.UpdateUserRequest) (*pb.UserReply, error) {
+func (s *UserService) UpdateUser(ctx context.Context, req *pb.UpdateUserRequest) (*pb.UserReply, error) {
 	user := &biz.User{
 		Username:  req.Username,
 		Phone:     req.Phone,

@@ -5,13 +5,13 @@ import (
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/go-redis/redis/v8"
 	"github.com/google/wire"
+	"github.com/yogerhub/kratos-news-system/app/user/service/internal/conf"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
-	"kratos-news-system/app/user/service/internal/conf"
 )
 
 // ProviderSet is data providers.
-var ProviderSet = wire.NewSet(NewData, NewDB, NewUserRepo, NewArticleRepo, NewCommentRepo)
+var ProviderSet = wire.NewSet(NewData, NewDB, NewUserRepo)
 
 // Data .
 type Data struct {
@@ -43,8 +43,6 @@ func NewDB(c *conf.Data) *gorm.DB {
 	}
 	if err := db.AutoMigrate(
 		&User{},
-		&Article{},
-		&Comment{},
 	); err != nil {
 		panic(err)
 	}
