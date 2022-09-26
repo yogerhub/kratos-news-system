@@ -23,14 +23,6 @@ init:
 	go install github.com/go-kratos/kratos/cmd/protoc-gen-go-http/v2@latest
 	go install github.com/google/gnostic/cmd/protoc-gen-openapi@latest
 
-.PHONY: config
-# generate internal proto
-config:
-	protoc --proto_path=./internal \
-	       --proto_path=./third_party \
- 	       --go_out=paths=source_relative:./internal \
-	       $(INTERNAL_PROTO_FILES)
-
 .PHONY: api
 # generate api proto
 api:
@@ -41,25 +33,6 @@ api:
  	       --go-grpc_out=paths=source_relative:./api \
 	       --openapi_out=fq_schema_naming=true,default_response=false:. \
 	       $(API_PROTO_FILES)
-
-.PHONY: build
-# build
-build:
-	mkdir -p bin/ && go build -ldflags "-X main.Version=$(VERSION)" -o ./bin/ ./...
-
-.PHONY: generate
-# generate
-generate:
-	go mod tidy
-	go get github.com/google/wire/cmd/wire@latest
-	go generate ./...
-
-.PHONY: all
-# generate all
-all:
-	make api;
-	make config;
-	make generate;
 
 # show help
 help:

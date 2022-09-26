@@ -6,26 +6,24 @@ import (
 	"github.com/go-kratos/kratos/v2/registry"
 	"github.com/google/wire"
 	consulAPI "github.com/hashicorp/consul/api"
-	pb "github.com/kratos-news-system/api/user/v1"
-	biz2 "kratos-news-system/app/user/service/internal/biz"
-	"kratos-news-system/app/user/service/internal/conf"
+	pb "github.com/yogerhub/kratos-news-system/api/news/v1"
+	biz2 "github.com/yogerhub/kratos-news-system/app/news/service/internal/biz"
+	"github.com/yogerhub/kratos-news-system/app/news/service/internal/conf"
 )
 
 // ProviderSet is service providers.
 var ProviderSet = wire.NewSet(NewNewsService, NewRegistrar)
 
 type NewsService struct {
-	pb.UnimplementedUserServer
+	pb.UnimplementedNewsServer
 	log     *log.Helper
-	user    *biz2.UserUsecase
 	article *biz2.ArticleUsecase
 	comment *biz2.CommentUsecase
 }
 
-func NewNewsService(article *biz2.ArticleUsecase, user *biz2.UserUsecase, comment *biz2.CommentUsecase, logger log.Logger) *NewsService {
+func NewNewsService(article *biz2.ArticleUsecase, comment *biz2.CommentUsecase, logger log.Logger) *NewsService {
 	return &NewsService{
 		article: article,
-		user:    user,
 		comment: comment,
 		log:     log.NewHelper(logger),
 	}

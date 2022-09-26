@@ -9,11 +9,11 @@ import (
 	"github.com/go-kratos/kratos/v2"
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/google/wire"
-	"kratos-news-system/app/internal/biz"
-	"kratos-news-system/app/internal/conf"
-	"kratos-news-system/app/internal/data"
-	"kratos-news-system/app/internal/server"
-	"kratos-news-system/app/internal/service"
+	"github.com/yogerhub/kratos-news-system/app/user/service/internal/biz"
+	"github.com/yogerhub/kratos-news-system/app/user/service/internal/conf"
+	"github.com/yogerhub/kratos-news-system/app/user/service/internal/data"
+	"github.com/yogerhub/kratos-news-system/app/user/service/internal/server"
+	"github.com/yogerhub/kratos-news-system/app/user/service/internal/service"
 )
 
 // wireApp init kratos application.

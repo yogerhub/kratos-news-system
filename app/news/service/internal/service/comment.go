@@ -2,11 +2,11 @@ package service
 
 import (
 	"context"
+	"github.com/yogerhub/kratos-news-system/app/news/service/internal/biz"
 	"google.golang.org/protobuf/types/known/timestamppb"
-	"kratos-news-system/app/user/service/internal/biz"
 	"time"
 
-	pb "kratos-news-system/api/news/v1"
+	pb "github.com/yogerhub/kratos-news-system/api/news/v1"
 )
 
 func (s *NewsService) AddComment(ctx context.Context, req *pb.AddCommentRequest) (*pb.AddCommentReply, error) {
