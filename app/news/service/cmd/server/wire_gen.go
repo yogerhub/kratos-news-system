@@ -31,9 +31,8 @@ func wireApp(confServer *conf.Server, registry *conf.Registry, confData *conf.Da
 	commentUsecase := biz.NewCommentUsecase(commentRepo, logger)
 	newsService := service.NewNewsService(articleUsecase, commentUsecase, logger)
 	grpcServer := server.NewGRPCServer(confServer, newsService, logger)
-	httpServer := server.NewHTTPServer(confServer, newsService, logger)
 	registrar := service.NewRegistrar(registry)
-	app := newApp(logger, grpcServer, httpServer, registrar)
+	app := newApp(logger, grpcServer, registrar)
 	return app, func() {
 		cleanup()
 	}, nil

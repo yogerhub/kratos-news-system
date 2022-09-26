@@ -4,7 +4,6 @@ package news.v1;
 
 option go_package = "kratos-user-system/api/news/v1;v1";
 
-import "google/api/annotations.proto";
 // the validate rules:
 // https://github.com/envoyproxy/protoc-gen-validate
 import "validate/validate.proto";
@@ -12,52 +11,21 @@ import "google/protobuf/timestamp.proto";
 
 // The greeting service definition.
 service News {
-  rpc CreateArticle (CreateArticleRequest) returns (CreateArticleReply) {
-    option (google.api.http) = {
-      post: "/v1/article"
-      body: "*"
-    };
-  }
-  rpc UpdateArticle (UpdateArticleRequest) returns (UpdateArticleReply) {
-    option (google.api.http) = {
-      put: "/v1/article/{id}"
-      body: "*"
-    };
-  }
-  rpc DeleteArticle (DeleteArticleRequest) returns (DeleteArticleReply) {
-    option (google.api.http) = {
-      delete: "/v1/article/{id}"
-    };
-  }
-  rpc GetArticle (GetArticleRequest) returns (GetArticleReply) {
-    option (google.api.http) = {
-      get: "/v1/article/{id}"
-    };
-  }
-  rpc ListArticle (ListArticleRequest) returns (ListArticleReply) {
-    option (google.api.http) = {
-      get: "/v1/article"
-    };
-  }
+  rpc CreateArticle (CreateArticleRequest) returns (CreateArticleReply) {}
 
-  rpc AddComment(AddCommentRequest) returns (AddCommentReply) {
-    option (google.api.http) = {
-      post : "/v1/articles/{article_id}/comments",
-      body : "*",
-    };
-  }
+  rpc UpdateArticle (UpdateArticleRequest) returns (UpdateArticleReply) {}
 
-  rpc GetComments(GetCommentRequest) returns (GetCommentReply) {
-    option (google.api.http) = {
-      get : "/v1/articles/{article_id}/comments",
-    };
-  }
+  rpc DeleteArticle (DeleteArticleRequest) returns (DeleteArticleReply) {}
 
-  rpc DeleteComment(DeleteCommentRequest) returns (DeleteCommentReply) {
-    option (google.api.http) = {
-      delete : "/v1/articles/{article_id}/comments/{id}",
-    };
-  }
+  rpc GetArticle (GetArticleRequest) returns (GetArticleReply) {}
+
+  rpc ListArticle (ListArticleRequest) returns (ListArticleReply) {}
+
+  rpc AddComment(AddCommentRequest) returns (AddCommentReply) {}
+
+  rpc GetComments(GetCommentRequest) returns (GetCommentReply) {}
+
+  rpc DeleteComment(DeleteCommentRequest) returns (DeleteCommentReply) {}
 }
 
 message Article {
