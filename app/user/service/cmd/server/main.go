@@ -22,8 +22,6 @@ var (
 	Version string
 	// flagconf is the config flag.
 	flagconf string
-
-	id = "10001"
 )
 
 func init() {
@@ -32,7 +30,6 @@ func init() {
 
 func newApp(logger log.Logger, gs *grpc.Server, reg registry.Registrar) *kratos.App {
 	return kratos.New(
-		kratos.ID(id),
 		kratos.Name(Name),
 		kratos.Version(Version),
 		kratos.Metadata(map[string]string{}),
@@ -49,7 +46,6 @@ func main() {
 	logger := log.With(log.NewStdLogger(os.Stdout),
 		"ts", log.DefaultTimestamp,
 		"caller", log.DefaultCaller,
-		"service.id", id,
 		"service.name", Name,
 		"service.version", Version,
 		"trace.id", tracing.TraceID(),
