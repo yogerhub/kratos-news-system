@@ -25,12 +25,8 @@ const OperationNewsDeleteArticle = "/news.v1.News/DeleteArticle"
 const OperationNewsDeleteComment = "/news.v1.News/DeleteComment"
 const OperationNewsGetArticle = "/news.v1.News/GetArticle"
 const OperationNewsGetComments = "/news.v1.News/GetComments"
-const OperationNewsGetUserByPhone = "/news.v1.News/GetUserByPhone"
 const OperationNewsListArticle = "/news.v1.News/ListArticle"
-const OperationNewsLogin = "/news.v1.News/Login"
-const OperationNewsRegister = "/news.v1.News/Register"
 const OperationNewsUpdateArticle = "/news.v1.News/UpdateArticle"
-const OperationNewsUpdateUser = "/news.v1.News/UpdateUser"
 
 type NewsHTTPServer interface {
 	AddComment(context.Context, *AddCommentRequest) (*AddCommentReply, error)
@@ -39,20 +35,12 @@ type NewsHTTPServer interface {
 	DeleteComment(context.Context, *DeleteCommentRequest) (*DeleteCommentReply, error)
 	GetArticle(context.Context, *GetArticleRequest) (*GetArticleReply, error)
 	GetComments(context.Context, *GetCommentRequest) (*GetCommentReply, error)
-	GetUserByPhone(context.Context, *GetUserByPhoneRequest) (*UserReply, error)
 	ListArticle(context.Context, *ListArticleRequest) (*ListArticleReply, error)
-	Login(context.Context, *LoginRequest) (*UserReply, error)
-	Register(context.Context, *RegisterRequest) (*UserReply, error)
 	UpdateArticle(context.Context, *UpdateArticleRequest) (*UpdateArticleReply, error)
-	UpdateUser(context.Context, *UpdateUserRequest) (*UserReply, error)
 }
 
 func RegisterNewsHTTPServer(s *http.Server, srv NewsHTTPServer) {
 	r := s.Route("/")
-	r.POST("/v1/user", _News_Register0_HTTP_Handler(srv))
-	r.POST("/v1/user/login", _News_Login0_HTTP_Handler(srv))
-	r.GET("/v1/user/{phone}", _News_GetUserByPhone0_HTTP_Handler(srv))
-	r.PUT("/v1/user", _News_UpdateUser0_HTTP_Handler(srv))
 	r.POST("/v1/article", _News_CreateArticle0_HTTP_Handler(srv))
 	r.PUT("/v1/article/{id}", _News_UpdateArticle0_HTTP_Handler(srv))
 	r.DELETE("/v1/article/{id}", _News_DeleteArticle0_HTTP_Handler(srv))
@@ -61,85 +49,6 @@ func RegisterNewsHTTPServer(s *http.Server, srv NewsHTTPServer) {
 	r.POST("/v1/articles/{article_id}/comments", _News_AddComment0_HTTP_Handler(srv))
 	r.GET("/v1/articles/{article_id}/comments", _News_GetComments0_HTTP_Handler(srv))
 	r.DELETE("/v1/articles/{article_id}/comments/{id}", _News_DeleteComment0_HTTP_Handler(srv))
-}
-
-func _News_Register0_HTTP_Handler(srv NewsHTTPServer) func(ctx http.Context) error {
-	return func(ctx http.Context) error {
-		var in RegisterRequest
-		if err := ctx.Bind(&in); err != nil {
-			return err
-		}
-		http.SetOperation(ctx, OperationNewsRegister)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.Register(ctx, req.(*RegisterRequest))
-		})
-		out, err := h(ctx, &in)
-		if err != nil {
-			return err
-		}
-		reply := out.(*UserReply)
-		return ctx.Result(200, reply)
-	}
-}
-
-func _News_Login0_HTTP_Handler(srv NewsHTTPServer) func(ctx http.Context) error {
-	return func(ctx http.Context) error {
-		var in LoginRequest
-		if err := ctx.Bind(&in); err != nil {
-			return err
-		}
-		http.SetOperation(ctx, OperationNewsLogin)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.Login(ctx, req.(*LoginRequest))
-		})
-		out, err := h(ctx, &in)
-		if err != nil {
-			return err
-		}
-		reply := out.(*UserReply)
-		return ctx.Result(200, reply)
-	}
-}
-
-func _News_GetUserByPhone0_HTTP_Handler(srv NewsHTTPServer) func(ctx http.Context) error {
-	return func(ctx http.Context) error {
-		var in GetUserByPhoneRequest
-		if err := ctx.BindQuery(&in); err != nil {
-			return err
-		}
-		if err := ctx.BindVars(&in); err != nil {
-			return err
-		}
-		http.SetOperation(ctx, OperationNewsGetUserByPhone)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.GetUserByPhone(ctx, req.(*GetUserByPhoneRequest))
-		})
-		out, err := h(ctx, &in)
-		if err != nil {
-			return err
-		}
-		reply := out.(*UserReply)
-		return ctx.Result(200, reply)
-	}
-}
-
-func _News_UpdateUser0_HTTP_Handler(srv NewsHTTPServer) func(ctx http.Context) error {
-	return func(ctx http.Context) error {
-		var in UpdateUserRequest
-		if err := ctx.Bind(&in); err != nil {
-			return err
-		}
-		http.SetOperation(ctx, OperationNewsUpdateUser)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.UpdateUser(ctx, req.(*UpdateUserRequest))
-		})
-		out, err := h(ctx, &in)
-		if err != nil {
-			return err
-		}
-		reply := out.(*UserReply)
-		return ctx.Result(200, reply)
-	}
 }
 
 func _News_CreateArticle0_HTTP_Handler(srv NewsHTTPServer) func(ctx http.Context) error {
@@ -319,12 +228,8 @@ type NewsHTTPClient interface {
 	DeleteComment(ctx context.Context, req *DeleteCommentRequest, opts ...http.CallOption) (rsp *DeleteCommentReply, err error)
 	GetArticle(ctx context.Context, req *GetArticleRequest, opts ...http.CallOption) (rsp *GetArticleReply, err error)
 	GetComments(ctx context.Context, req *GetCommentRequest, opts ...http.CallOption) (rsp *GetCommentReply, err error)
-	GetUserByPhone(ctx context.Context, req *GetUserByPhoneRequest, opts ...http.CallOption) (rsp *UserReply, err error)
 	ListArticle(ctx context.Context, req *ListArticleRequest, opts ...http.CallOption) (rsp *ListArticleReply, err error)
-	Login(ctx context.Context, req *LoginRequest, opts ...http.CallOption) (rsp *UserReply, err error)
-	Register(ctx context.Context, req *RegisterRequest, opts ...http.CallOption) (rsp *UserReply, err error)
 	UpdateArticle(ctx context.Context, req *UpdateArticleRequest, opts ...http.CallOption) (rsp *UpdateArticleReply, err error)
-	UpdateUser(ctx context.Context, req *UpdateUserRequest, opts ...http.CallOption) (rsp *UserReply, err error)
 }
 
 type NewsHTTPClientImpl struct {
@@ -413,19 +318,6 @@ func (c *NewsHTTPClientImpl) GetComments(ctx context.Context, in *GetCommentRequ
 	return &out, err
 }
 
-func (c *NewsHTTPClientImpl) GetUserByPhone(ctx context.Context, in *GetUserByPhoneRequest, opts ...http.CallOption) (*UserReply, error) {
-	var out UserReply
-	pattern := "/v1/user/{phone}"
-	path := binding.EncodeURL(pattern, in, true)
-	opts = append(opts, http.Operation(OperationNewsGetUserByPhone))
-	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return &out, err
-}
-
 func (c *NewsHTTPClientImpl) ListArticle(ctx context.Context, in *ListArticleRequest, opts ...http.CallOption) (*ListArticleReply, error) {
 	var out ListArticleReply
 	pattern := "/v1/article"
@@ -439,50 +331,11 @@ func (c *NewsHTTPClientImpl) ListArticle(ctx context.Context, in *ListArticleReq
 	return &out, err
 }
 
-func (c *NewsHTTPClientImpl) Login(ctx context.Context, in *LoginRequest, opts ...http.CallOption) (*UserReply, error) {
-	var out UserReply
-	pattern := "/v1/user/login"
-	path := binding.EncodeURL(pattern, in, false)
-	opts = append(opts, http.Operation(OperationNewsLogin))
-	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return &out, err
-}
-
-func (c *NewsHTTPClientImpl) Register(ctx context.Context, in *RegisterRequest, opts ...http.CallOption) (*UserReply, error) {
-	var out UserReply
-	pattern := "/v1/user"
-	path := binding.EncodeURL(pattern, in, false)
-	opts = append(opts, http.Operation(OperationNewsRegister))
-	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return &out, err
-}
-
 func (c *NewsHTTPClientImpl) UpdateArticle(ctx context.Context, in *UpdateArticleRequest, opts ...http.CallOption) (*UpdateArticleReply, error) {
 	var out UpdateArticleReply
 	pattern := "/v1/article/{id}"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationNewsUpdateArticle))
-	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "PUT", path, in, &out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return &out, err
-}
-
-func (c *NewsHTTPClientImpl) UpdateUser(ctx context.Context, in *UpdateUserRequest, opts ...http.CallOption) (*UserReply, error) {
-	var out UserReply
-	pattern := "/v1/user"
-	path := binding.EncodeURL(pattern, in, false)
-	opts = append(opts, http.Operation(OperationNewsUpdateUser))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "PUT", path, in, &out, opts...)
 	if err != nil {

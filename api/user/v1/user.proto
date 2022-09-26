@@ -1,0 +1,74 @@
+syntax = "proto3";
+
+package user.v1;
+
+option go_package = "kratos-user-system/api/user/v1;v1";
+
+import "google/api/annotations.proto";
+import "google/protobuf/timestamp.proto";
+
+// The greeting service definition.
+service User {
+  rpc Register (RegisterRequest) returns (UserReply) {
+    option (google.api.http) = {
+      post: "/v1/user"
+      body: "*"
+    };
+  }
+  rpc Login(LoginRequest) returns (UserReply) {
+    option (google.api.http) = {
+      post : "/v1/user/login",
+      body : "*",
+    };
+  }
+  rpc GetUserByPhone(GetUserByPhoneRequest) returns (UserReply) {
+    option (google.api.http) = {
+      get : "/v1/user/{phone}",
+    };
+  }
+  rpc UpdateUser(UpdateUserRequest) returns (UserReply) {
+    option (google.api.http) = {
+      put : "/v1/user",
+      body : "*",
+    };
+  }
+
+}
+message UserInfo {
+  int64 id = 1;
+  string username = 2;
+  string phone = 3;
+  string password = 4;
+  google.protobuf.Timestamp createdAt = 5;
+  google.protobuf.Timestamp updatedAt = 6;
+}
+
+message RegisterRequest {
+  string username = 1;
+  string phone = 2;
+  string password = 3;
+}
+
+message UserReply {
+  UserInfo user = 1;
+}
+
+message LoginRequest {
+  string username = 1;
+  string password = 2;
+}
+
+message GetUserByPhoneRequest {
+  string phone = 1;
+}
+
+message UpdateUserRequest {
+  int64 id = 1;
+  string username = 2;
+  string phone = 3;
+  string password = 4;
+}
+
+
+
+

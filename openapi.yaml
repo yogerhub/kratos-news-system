@@ -3,8 +3,7 @@
 
 openapi: 3.0.3
 info:
-    title: News API
-    description: The greeting service definition.
+    title: ""
     version: 0.0.1
 paths:
     /v1/article:
@@ -173,13 +172,13 @@ paths:
     /v1/user:
         put:
             tags:
-                - News
-            operationId: News_UpdateUser
+                - User
+            operationId: User_UpdateUser
             requestBody:
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/news.v1.UpdateUserRequest'
+                            $ref: '#/components/schemas/user.v1.UpdateUserRequest'
                 required: true
             responses:
                 "200":
@@ -187,16 +186,16 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/news.v1.UserReply'
+                                $ref: '#/components/schemas/user.v1.UserReply'
         post:
             tags:
-                - News
-            operationId: News_Register
+                - User
+            operationId: User_Register
             requestBody:
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/news.v1.RegisterRequest'
+                            $ref: '#/components/schemas/user.v1.RegisterRequest'
                 required: true
             responses:
                 "200":
@@ -204,17 +203,17 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/news.v1.UserReply'
+                                $ref: '#/components/schemas/user.v1.UserReply'
     /v1/user/login:
         post:
             tags:
-                - News
-            operationId: News_Login
+                - User
+            operationId: User_Login
             requestBody:
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/news.v1.LoginRequest'
+                            $ref: '#/components/schemas/user.v1.LoginRequest'
                 required: true
             responses:
                 "200":
@@ -222,12 +221,12 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/news.v1.UserReply'
+                                $ref: '#/components/schemas/user.v1.UserReply'
     /v1/user/{phone}:
         get:
             tags:
-                - News
-            operationId: News_GetUserByPhone
+                - User
+            operationId: User_GetUserByPhone
             parameters:
                 - name: phone
                   in: path
@@ -240,7 +239,7 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/news.v1.UserReply'
+                                $ref: '#/components/schemas/user.v1.UserReply'
 components:
     schemas:
         news.v1.AddCommentReply:
@@ -329,22 +328,6 @@ components:
                     type: array
                     items:
                         $ref: '#/components/schemas/news.v1.Article'
-        news.v1.LoginRequest:
-            type: object
-            properties:
-                username:
-                    type: string
-                password:
-                    type: string
-        news.v1.RegisterRequest:
-            type: object
-            properties:
-                username:
-                    type: string
-                phone:
-                    type: string
-                password:
-                    type: string
         news.v1.UpdateArticleReply:
             type: object
             properties:
@@ -360,7 +343,23 @@ components:
                     type: string
                 content:
                     type: string
-        news.v1.UpdateUserRequest:
+        user.v1.LoginRequest:
+            type: object
+            properties:
+                username:
+                    type: string
+                password:
+                    type: string
+        user.v1.RegisterRequest:
+            type: object
+            properties:
+                username:
+                    type: string
+                phone:
+                    type: string
+                password:
+                    type: string
+        user.v1.UpdateUserRequest:
             type: object
             properties:
                 id:
@@ -372,7 +371,7 @@ components:
                     type: string
                 password:
                     type: string
-        news.v1.User:
+        user.v1.UserInfo:
             type: object
             properties:
                 id:
@@ -390,10 +389,13 @@ components:
                 updatedAt:
                     type: string
                     format: date-time
-        news.v1.UserReply:
+        user.v1.UserReply:
             type: object
             properties:
                 user:
-                    $ref: '#/components/schemas/news.v1.User'
+                    $ref: '#/components/schemas/user.v1.UserInfo'
 tags:
     - name: News
+      description: The greeting service definition.
+    - name: User
+      description: The greeting service definition.

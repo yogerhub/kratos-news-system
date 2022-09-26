@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+package news.v1;
+
+option go_package = "kratos-user-system/api/news/v1;v1";
+
+
+enum NewsErrorReason {
+  GREETER_UNSPECIFIED = 0;
+  NEWS_NOT_FOUND = 1;
+}
