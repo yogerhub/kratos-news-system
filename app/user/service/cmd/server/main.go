@@ -4,6 +4,9 @@ import (
 	"flag"
 	"github.com/go-kratos/kratos/v2/registry"
 	"github.com/yogerhub/kratos-news-system/app/user/service/internal/conf"
+	"go.opentelemetry.io/otel"
+	"go.opentelemetry.io/otel/sdk/resource"
+	tracesdk "go.opentelemetry.io/otel/sdk/trace"
 	"os"
 
 	"github.com/go-kratos/kratos/v2"
@@ -12,14 +15,16 @@ import (
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/go-kratos/kratos/v2/middleware/tracing"
 	"github.com/go-kratos/kratos/v2/transport/grpc"
+	"go.opentelemetry.io/otel/exporters/jaeger"
+	semconv "go.opentelemetry.io/otel/semconv/v1.4.0"
 )
 
 // go build -ldflags "-X main.Version=x.y.z"
 var (
 	// Name is the name of the compiled software.
-	Name = "service.user.service"
+	Name = "kns.user.service"
 	// Version is the version of the compiled software.
-	Version string
+	Version = "1.0"
 	// flagconf is the config flag.
 	flagconf string
 )
@@ -51,6 +56,7 @@ func main() {
 		"trace.id", tracing.TraceID(),
 		"span.id", tracing.SpanID(),
 	)
+
 	c := config.New(
 		config.WithSource(
 			file.NewSource(flagconf),
@@ -72,7 +78,20 @@ func main() {
 		panic(err)
 	}
 
-	app, cleanup, err := wireApp(bc.Server, &rc, bc.Data, logger)
+	exp, err := jaeger.New(jaeger.WithCollectorEndpoint(jaeger.WithEndpoint(bc.Trace.Endpoint)))
+	if err != nil {
+		panic(err)
+	}
+
+	tp := tracesdk.NewTracerProvider(
+		tracesdk.WithBatcher(exp),
+		tracesdk.WithResource(resource.NewSchemaless(
+			semconv.ServiceNameKey.String(Name),
+		)),
+	)
+	otel.SetTracerProvider(tp)
+
+	app, cleanup, err := wireApp(bc.Server, &rc, bc.Data, logger, tp)
 	if err != nil {
 		panic(err)
 	}

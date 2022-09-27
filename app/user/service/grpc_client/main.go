@@ -28,7 +28,7 @@ func main() {
 	conn, err := kgrpc.DialInsecure(
 		context.Background(),
 		kgrpc.WithDiscovery(r),
-		kgrpc.WithEndpoint("discovery:///service.user.service"),
+		kgrpc.WithEndpoint("discovery:///kns.user.service"),
 		kgrpc.WithMiddleware(
 			recovery.Recovery(),
 		),

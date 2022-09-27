@@ -14,9 +14,10 @@ import (
 	"github.com/yogerhub/kratos-news-system/app/user/service/internal/data"
 	"github.com/yogerhub/kratos-news-system/app/user/service/internal/server"
 	"github.com/yogerhub/kratos-news-system/app/user/service/internal/service"
+	tracesdk "go.opentelemetry.io/otel/sdk/trace"
 )
 
 // wireApp init kratos application.
-func wireApp(*conf.Server, *conf.Registry, *conf.Data, log.Logger) (*kratos.App, func(), error) {
+func wireApp(*conf.Server, *conf.Registry, *conf.Data, log.Logger, *tracesdk.TracerProvider) (*kratos.App, func(), error) {
 	panic(wire.Build(server.ProviderSet, data.ProviderSet, biz.ProviderSet, service.ProviderSet, newApp))
 }
