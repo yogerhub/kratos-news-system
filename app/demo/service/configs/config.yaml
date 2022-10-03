@@ -1,0 +1,17 @@
+trace:
+  endpoint: http://127.0.0.1:16686/api/traces
+server:
+  http:
+    addr: 0.0.0.0:8000
+    timeout: 1s
+  grpc:
+    addr: 0.0.0.0:0 #随机分配端口
+    timeout: 1s
+data:
+  database:
+    driver: mysql
+    source: "root:joydata@tcp(10.211.55.6:3306)/news?charset=utf8mb4&parseTime=True&loc=Local"
+  redis:
+    addr: 10.211.55.6:6379
+    read_timeout: 0.2s
+    write_timeout: 0.2s

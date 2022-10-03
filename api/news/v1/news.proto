@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package news.v1;
 
-option go_package = "kratos-user-system/api/news/v1;v1";
+option go_package = "kratos-news-system/api/news/v1;v1";
 
 // the validate rules:
 // https://github.com/envoyproxy/protoc-gen-validate

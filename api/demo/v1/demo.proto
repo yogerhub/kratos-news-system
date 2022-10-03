@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+package demo.v1;
+
+option go_package = "kratos-news-system/api/demo/v1;v1";
+
+// The service definition.
+service Demo {
+
+}

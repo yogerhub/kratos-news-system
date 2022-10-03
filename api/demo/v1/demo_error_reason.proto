@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+package demo.v1;
+
+option go_package = "kratos-user-system/api/demo/v1;v1";
+
+
+enum UserErrorReason {
+  GREETER_UNSPECIFIED = 0;
+  DEMO_NOT_FOUND = 1;
+}

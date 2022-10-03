@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package user.v1;
 
-option go_package = "kratos-user-system/api/user/v1;v1";
+option go_package = "kratos-news-system/api/user/v1;v1";
 
 import "google/protobuf/timestamp.proto";
 
