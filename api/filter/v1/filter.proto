@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+package filter.v1;
+
+option go_package = "kratos-news-system/api/filter/v1;v1";
+
+// The service definition.
+service Filter {
+
+}

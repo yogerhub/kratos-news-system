@@ -22,7 +22,8 @@ import (
 // wireApp init kratos application.
 func wireApp(confServer *conf.Server, registry *conf.Registry, confData *conf.Data, logger log.Logger, tracerProvider *trace.TracerProvider) (*kratos.App, func(), error) {
 	db := data.NewDB(confData)
-	dataData, cleanup, err := data.NewData(confData, logger, db)
+	writer := data.NewKafkaProducer(confData)
+	dataData, cleanup, err := data.NewData(confData, logger, db, writer)
 	if err != nil {
 		return nil, nil, err
 	}

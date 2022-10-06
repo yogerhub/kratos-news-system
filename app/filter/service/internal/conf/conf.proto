@@ -14,7 +14,6 @@ message Bootstrap {
 message Trace {
   string endpoint = 1;
 }
-
 message Server {
   message HTTP {
     string network = 1;

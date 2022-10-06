@@ -5,24 +5,22 @@ import (
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/go-redis/redis/v8"
 	"github.com/google/wire"
-	"github.com/segmentio/kafka-go"
-	"github.com/yogerhub/kratos-news-system/app/news/service/internal/conf"
+	"github.com/yogerhub/kratos-news-system/app/filter/service/internal/conf"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
 
 // ProviderSet is data providers.
-var ProviderSet = wire.NewSet(NewData, NewDB, NewArticleRepo, NewCommentRepo, NewKafkaProducer)
+var ProviderSet = wire.NewSet(NewData, NewDB, NewFilterRepo)
 
 // Data .
 type Data struct {
 	db  *gorm.DB
 	rdb *redis.Client
-	kp  *kafka.Writer
 }
 
 // NewData .
-func NewData(c *conf.Data, logger log.Logger, db *gorm.DB, kp *kafka.Writer) (*Data, func(), error) {
+func NewData(c *conf.Data, logger log.Logger, db *gorm.DB) (*Data, func(), error) {
 	cleanup := func() {
 		log.NewHelper(logger).Info("closing the data resources")
 	}
@@ -33,7 +31,7 @@ func NewData(c *conf.Data, logger log.Logger, db *gorm.DB, kp *kafka.Writer) (*D
 		ReadTimeout:  c.Redis.ReadTimeout.AsDuration(),
 	})
 
-	return &Data{db: db, rdb: rdb, kp: kp}, cleanup, nil
+	return &Data{db: db, rdb: rdb}, cleanup, nil
 }
 
 func NewDB(c *conf.Data) *gorm.DB {
@@ -43,21 +41,9 @@ func NewDB(c *conf.Data) *gorm.DB {
 	if err != nil {
 		panic("failed to connect database")
 	}
-	if err := db.AutoMigrate(
-		&Article{},
-		&Comment{},
-	); err != nil {
+	if err := db.AutoMigrate(); err != nil {
 		panic(err)
 	}
 	fmt.Println(err)
 	return db
-}
-
-func NewKafkaProducer(conf *conf.Data) *kafka.Writer {
-	w := &kafka.Writer{
-		Topic:    "kns-create-comment",
-		Addr:     kafka.TCP(conf.Kafka.Addrs...),
-		Balancer: &kafka.LeastBytes{},
-	}
-	return w
 }

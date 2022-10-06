@@ -40,6 +40,7 @@ func main() {
 	defer conn.Close()
 
 	callGetArticleGRPC(conn)
+	callCreateCommentsGRPC(conn)
 	callGetCommentsGRPC(conn)
 }
 
@@ -53,6 +54,23 @@ func callGetArticleGRPC(conn *grpc.ClientConn) {
 
 	if errors.IsBadRequest(err) {
 		log.Printf("[grpc] GetArticle error is invalid argument: %v\n", err)
+	}
+}
+
+func callCreateCommentsGRPC(conn *grpc.ClientConn) {
+	client := newsCli.NewNewsClient(conn)
+	reply, err := client.AddComment(context.Background(), &newsCli.AddCommentRequest{
+		UserId:    1,
+		ArticleId: 1,
+		Content:   "hello world!",
+	})
+	if err != nil {
+		log.Fatal(err)
+	}
+	log.Println("[grpc] AddComment", reply, err)
+
+	if errors.IsBadRequest(err) {
+		log.Printf("[grpc] AddComment error is invalid argument: %v\n", err)
 	}
 }
 

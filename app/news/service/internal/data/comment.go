@@ -2,7 +2,9 @@ package data
 
 import (
 	"context"
+	"encoding/json"
 	"github.com/go-kratos/kratos/v2/log"
+	"github.com/segmentio/kafka-go"
 	"github.com/yogerhub/kratos-news-system/app/news/service/internal/biz"
 	"gorm.io/gorm"
 )
@@ -38,6 +40,14 @@ func (r *commentRepo) AddComment(ctx context.Context, comment *biz.Comment) (*bi
 	if result.Error != nil {
 		return nil, result.Error
 	}
+	commentJson, err := json.Marshal(co)
+	if err != nil {
+		log.Error("Marshal error", commentJson, err)
+	}
+	r.data.kp.WriteMessages(ctx, kafka.Message{
+		Key:   []byte("kratos"),
+		Value: commentJson,
+	})
 
 	return &biz.Comment{
 		ID:        int64(co.ID),
