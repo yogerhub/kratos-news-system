@@ -25,7 +25,7 @@ config:
 .PHONY: build
 # build
 build:
-	mkdir -p bin/ && go build -ldflags "-X main.Version=$(VERSION)" -o ./bin/ ./...
+	mkdir -p bin/main/ && go build -ldflags "-X main.Version=$(VERSION)" -o ./bin/main/ ./... && cp -rf configs bin/
 
 .PHONY: wire
 # generate
