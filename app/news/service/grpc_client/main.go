@@ -62,7 +62,7 @@ func callCreateCommentsGRPC(conn *grpc.ClientConn) {
 	reply, err := client.AddComment(context.Background(), &newsCli.AddCommentRequest{
 		UserId:    1,
 		ArticleId: 1,
-		Content:   "hello world!",
+		Content:   "hello world! test",
 	})
 	if err != nil {
 		log.Fatal(err)
