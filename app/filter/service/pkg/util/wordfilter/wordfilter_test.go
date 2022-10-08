@@ -11,7 +11,7 @@ func init() {
 	importWords(T, "alarm_sc.txt")
 }
 
-func TestReplace(t *testing.T) {
+func TestCheck(t *testing.T) {
 	tests := []struct {
 		txt    string
 		result bool
