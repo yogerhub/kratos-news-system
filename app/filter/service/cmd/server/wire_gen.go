@@ -30,7 +30,7 @@ func wireApp(confServer *conf.Server, registry *conf.Registry, confData *conf.Da
 	filterUsecase := biz.NewFilterUsecase(filterRepo, logger)
 	filterService := service.NewFilterService(filterUsecase, logger)
 	grpcServer := server.NewGRPCServer(confServer, filterService, logger)
-	registrar := service.NewRegistrar(registry)
+	registrar := server.NewRegistrar(registry)
 	kafkaConsumerJobServer := service.NewKafkaConsumerJobServer(confData)
 	app := newApp(logger, grpcServer, registrar, kafkaConsumerJobServer)
 	return app, func() {
