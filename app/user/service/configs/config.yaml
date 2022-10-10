@@ -2,7 +2,7 @@ trace:
   endpoint: http://127.0.0.1:14268/api/traces
 server:
   http:
-    addr: 0.0.0.0:8000
+    addr: 0.0.0.0:8200
     timeout: 1s
   grpc:
     addr: 0.0.0.0:0 #随机分配端口
