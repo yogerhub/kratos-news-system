@@ -2,21 +2,22 @@ package main
 
 import (
 	"flag"
-	"github.com/go-kratos/kratos/v2/registry"
-	"github.com/yogerhub/kratos-news-system/app/user/service/internal/conf"
-	"go.opentelemetry.io/otel"
-	"go.opentelemetry.io/otel/sdk/resource"
-	tracesdk "go.opentelemetry.io/otel/sdk/trace"
-	"os"
-
 	"github.com/go-kratos/kratos/v2"
 	"github.com/go-kratos/kratos/v2/config"
 	"github.com/go-kratos/kratos/v2/config/file"
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/go-kratos/kratos/v2/middleware/tracing"
+	"github.com/go-kratos/kratos/v2/registry"
 	"github.com/go-kratos/kratos/v2/transport/grpc"
+	"github.com/yogerhub/kratos-news-system/app/user/service/internal/conf"
+	zaplog "github.com/yogerhub/kratos-news-system/pkg/util/log"
+	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/exporters/jaeger"
+	"go.opentelemetry.io/otel/sdk/resource"
+	tracesdk "go.opentelemetry.io/otel/sdk/trace"
 	semconv "go.opentelemetry.io/otel/semconv/v1.4.0"
+	"go.uber.org/zap"
+	"go.uber.org/zap/zapcore"
 )
 
 // go build -ldflags "-X main.Version=x.y.z"
@@ -46,9 +47,38 @@ func newApp(logger log.Logger, gs *grpc.Server, reg registry.Registrar) *kratos.
 	)
 }
 
+var sugarLogger *zap.SugaredLogger
+
 func main() {
 	flag.Parse()
-	logger := log.With(log.NewStdLogger(os.Stdout),
+
+	encoder := zapcore.EncoderConfig{
+		TimeKey:        "t",
+		LevelKey:       "level",
+		NameKey:        "logger",
+		CallerKey:      "caller",
+		MessageKey:     "msg",
+		StacktraceKey:  "stack",
+		EncodeTime:     zapcore.ISO8601TimeEncoder,
+		LineEnding:     zapcore.DefaultLineEnding,
+		EncodeLevel:    zapcore.LowercaseLevelEncoder,
+		EncodeDuration: zapcore.SecondsDurationEncoder,
+		EncodeCaller:   zapcore.FullCallerEncoder,
+	}
+
+	zlogger := zaplog.NewZapLogger(
+		encoder,
+		zap.NewAtomicLevelAt(zapcore.DebugLevel),
+		zap.AddStacktrace(zap.NewAtomicLevelAt(zapcore.ErrorLevel)),
+		zap.AddCaller(),
+		zap.AddCallerSkip(2),
+		zap.Development(),
+	)
+
+	zlog := log.NewHelper(zlogger)
+	zlog.Infow("name", "kratos", "from", "opensource")
+	logger := log.With(
+		zlogger,
 		"ts", log.DefaultTimestamp,
 		"caller", log.DefaultCaller,
 		"service.name", Name,
